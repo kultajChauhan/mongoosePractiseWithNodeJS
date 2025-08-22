@@ -1,3 +1,6 @@
+const studentModel = require("../../models/web/models");
+
+
 let createController = async (req, res) => {
   let { sName, sEmail, sClass } = req.body;
 

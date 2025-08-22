@@ -1,5 +1,6 @@
 let express = require("express");
 let mongoose = require("mongoose");
+const { createController, updateController, readController, deleteController } = require("./app/controllers/web/controller");
 
 let app = express();
 app.use(express.json());
@@ -27,63 +28,16 @@ let studentModel = mongoose.model("studentDetail", studentDetailSchema);
 //CURD
 
 //create
-app.get("/create", async (req, res) => {
-  let { sName, sEmail, sClass } = req.body;
-
-  let student1 = new studentModel({
-    name: sName,
-    email: sEmail,
-    class: sClass,
-  });
-
-  let result = await student1.save();
-
-  res.send({ student1, result });
-});
+app.get("/create", createController);
 
 //update
-app.put("/update/:id", async (req, res) => {
-  let { sName, sEmail, sClass } = req.body;
-
-  let studentId = req.params.id;
-
-  let student = await studentModel.findById( studentId);
-
-  console.log(student)
-
-  if (sName != undefined) {
-    student.name = sName;
-  }  if (sEmail != undefined) {
-    student.email = sEmail;
-  }  if (sClass != undefined) {
-    student.class = sClass;
-  }
-
-  let result = await student.save()
-
-  res.send({student,result});
-});
+app.put("/update/:id", updateController);
 
 //read
-app.get('/read/:id',async (req,res)=>{
-
-    let studentId = req.params.id
-
-    let student = await studentModel.findById(studentId)
-
-    res.send(student)
-})
+app.get('/read/:id',readController)
 
 //delete
-app.delete('/delete/:id',async (req,res)=>{
-
-    let studentId = req.params.id
-
-    let deletedStudent = await studentModel.deleteOne({_id:studentId})
-
-    res.send(deletedStudent)
-
-})
+app.delete('/delete/:id',deleteController)
 
 app.listen(4000, () => {
   console.log("server is running on 4000");
